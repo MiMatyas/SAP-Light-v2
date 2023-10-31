@@ -22,6 +22,7 @@ public class OrderEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
     @Column
+    @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToMany
     @JoinTable(name = "goods",
