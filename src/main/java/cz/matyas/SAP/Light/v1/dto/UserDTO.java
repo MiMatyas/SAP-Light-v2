@@ -1,11 +1,13 @@
 package cz.matyas.SAP.Light.v1.dto;
 
+import java.util.List;
+
 public class UserDTO {
     private Long id;
     private String firstName;
     private String surname;
     private String email;
-    private Long addressId;
+    private List<Long> addressIds;
 
     public Long getId() {
         return id;
@@ -39,11 +41,11 @@ public class UserDTO {
         this.email = email;
     }
 
-    public Long getAddressId() {
-        return addressId;
+    public List<Long> getAddressIds() {
+        return addressIds;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setAddressIds(List<Long> addressIds) {
+        this.addressIds = addressIds;
     }
 }
