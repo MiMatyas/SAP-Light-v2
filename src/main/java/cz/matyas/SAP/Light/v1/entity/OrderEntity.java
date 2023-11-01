@@ -25,7 +25,7 @@ public class OrderEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToMany
-    @JoinTable(name = "goods",
+    @JoinTable(name = "t_goods_order",
     joinColumns = @JoinColumn(name = "order_id"),
     inverseJoinColumns = @JoinColumn(name = "goods_id"))
     private List<GoodsEntity> goods;
