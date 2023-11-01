@@ -1,5 +1,7 @@
 package cz.matyas.SAP.Light.v1.dto;
 
+import cz.matyas.SAP.Light.v1.enums.Role;
+
 import java.util.List;
 
 public class UserDTO {
@@ -7,6 +9,8 @@ public class UserDTO {
     private String firstName;
     private String surname;
     private String email;
+    private String password;
+    private Role role;
     private List<Long> addressIds;
 
     public Long getId() {
@@ -39,6 +43,22 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public List<Long> getAddressIds() {

@@ -1,5 +1,6 @@
 package cz.matyas.SAP.Light.v1.entity;
 
+import cz.matyas.SAP.Light.v1.enums.Role;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,10 +16,13 @@ public class UserEntity {
     private String firstName;
     @Column
     private String surname;
-    @Column
+    @Column(unique = true)
     private String email;
     @Column
     private String password;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -62,6 +66,14 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public List<AddressEntity> getAddresses() {

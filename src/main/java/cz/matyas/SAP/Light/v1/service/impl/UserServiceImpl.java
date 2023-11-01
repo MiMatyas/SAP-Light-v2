@@ -7,6 +7,7 @@ import cz.matyas.SAP.Light.v1.repository.UserRepository;
 import cz.matyas.SAP.Light.v1.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     UserMapper userMapper;
+
     @Override
     public List<UserDTO> getAll() {
         List<UserEntity> userEntityList = userRepository.findAll();
@@ -30,41 +32,51 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserById(Long id) {
-        UserEntity userEntity = geUserEntityOrThrow(id);
+        UserEntity userEntity = getUserEntityOrThrow(id);
 
         return userMapper.toDTO(userEntity);
     }
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
-        UserEntity createdUser = userRepository.save(userMapper.toEntity(userDTO));
 
-        return userMapper.toDTO(createdUser);
+        return saveUserDTOorThrow(userDTO);
     }
 
     @Override
     public UserDTO editUserById(Long id, UserDTO updateUserDTO) {
-        geUserEntityOrThrow(id);
-        UserEntity updateUserEntity = userMapper.toEntity(updateUserDTO);
-        updateUserEntity.setId(id);
-        userRepository.save(updateUserEntity);
+        getUserEntityOrThrow(id);
+        updateUserDTO.setId(id);
 
-        return userMapper.toDTO(updateUserEntity);
+        return saveUserDTOorThrow(updateUserDTO);
     }
 
     @Override
     public UserDTO deleteUserById(Long id) {
-        UserEntity deletedUserEntity = geUserEntityOrThrow(id);
+        UserEntity deletedUserEntity = getUserEntityOrThrow(id);
         userRepository.delete(deletedUserEntity);
 
         return userMapper.toDTO(deletedUserEntity);
     }
-    private UserEntity geUserEntityOrThrow(Long id){
+
+    private UserEntity getUserEntityOrThrow(Long id) {
         Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isEmpty()){
+        if (userEntity.isEmpty()) {
             throw new EntityNotFoundException("Uživatel s id " + id + " nebyl nalezen");
         }
 
         return userEntity.get();
+    }
+
+    private UserDTO saveUserDTOorThrow(UserDTO userDTO) {
+        UserEntity createdUser;
+        try {
+            createdUser = userRepository.save(userMapper.toEntity(userDTO));
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("email " + userDTO.getEmail() + "je již obsazen");
+        }
+
+        return userMapper.toDTO(createdUser);
+
     }
 }

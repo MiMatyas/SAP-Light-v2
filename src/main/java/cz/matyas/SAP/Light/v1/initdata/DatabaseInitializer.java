@@ -5,6 +5,7 @@ import cz.matyas.SAP.Light.v1.entity.GoodsEntity;
 import cz.matyas.SAP.Light.v1.entity.OrderEntity;
 import cz.matyas.SAP.Light.v1.entity.UserEntity;
 import cz.matyas.SAP.Light.v1.enums.Country;
+import cz.matyas.SAP.Light.v1.enums.Role;
 import cz.matyas.SAP.Light.v1.enums.Status;
 import cz.matyas.SAP.Light.v1.repository.AddressRepository;
 import cz.matyas.SAP.Light.v1.repository.GoodsRepository;
@@ -58,18 +59,35 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
     private void initUsers() {
-        UserEntity userEntityAdam = new UserEntity();
-        userEntityAdam.setFirstName("Adam");
-        userEntityAdam.setSurname("Novak");
-        userEntityAdam.setEmail("adam.novak@gmail.com");
+        UserEntity userEntitySuperAdmin = new UserEntity();
+        userEntitySuperAdmin.setFirstName("Super");
+        userEntitySuperAdmin.setSurname("Admin");
+        userEntitySuperAdmin.setEmail("super.admin@gmail.com");
+        userEntitySuperAdmin.setPassword("Admin*Admin");
+        userEntitySuperAdmin.setRole(Role.SUPER_ADMIN);
 
+        UserEntity userEntityAdmin = new UserEntity();
+        userEntityAdmin.setFirstName("Adam");
+        userEntityAdmin.setSurname("Novak");
+        userEntityAdmin.setEmail("adam.novak@gmail.com");
+        userEntityAdmin.setPassword("adamnovak");
+        userEntityAdmin.setRole(Role.ADMIN);
 
-        UserEntity userEntityPetr = new UserEntity();
-        userEntityPetr.setFirstName("Petr");
-        userEntityPetr.setSurname("Karadi");
-        userEntityPetr.setEmail("petr.karadi@gmail.com");
+        UserEntity userEntityOperator = new UserEntity();
+        userEntityOperator.setFirstName("Petr");
+        userEntityOperator.setSurname("Karadi");
+        userEntityOperator.setEmail("petr.karadi@gmail.com");
+        userEntityOperator.setPassword("petrkaradi");
+        userEntityOperator.setRole(Role.OPERATOR);
 
-        userRepository.saveAll(List.of(userEntityAdam, userEntityPetr));
+        UserEntity userEntityCustomer = new UserEntity();
+        userEntityCustomer.setFirstName("Marcel");
+        userEntityCustomer.setSurname("Raisig");
+        userEntityCustomer.setEmail("mardel.raisig@gmail.com");
+        userEntityCustomer.setPassword("petrkaradi");
+        userEntityCustomer.setRole(Role.CUSTOMER);
+
+        userRepository.saveAll(List.of(userEntitySuperAdmin, userEntityAdmin, userEntityOperator, userEntityCustomer));
 
     }
 
