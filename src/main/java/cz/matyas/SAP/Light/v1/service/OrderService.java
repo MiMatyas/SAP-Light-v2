@@ -10,4 +10,7 @@ public interface OrderService {
     OrderDTO createOrder(OrderDTO orderDTO);
     OrderDTO editOrderById(Long id, OrderDTO updateOrderDTO);
     OrderDTO deleteOrderById(Long id);
+
+    List<OrderDTO> getOrderForCurrentCustomer();
+    OrderDTO createOrderForCurrentCustomer(OrderDTO orderDTO);
 }

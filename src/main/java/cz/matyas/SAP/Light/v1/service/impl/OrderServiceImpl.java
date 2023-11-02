@@ -2,11 +2,14 @@ package cz.matyas.SAP.Light.v1.service.impl;
 
 import cz.matyas.SAP.Light.v1.dto.OrderDTO;
 import cz.matyas.SAP.Light.v1.entity.OrderEntity;
+import cz.matyas.SAP.Light.v1.entity.UserEntity;
 import cz.matyas.SAP.Light.v1.mapper.OrderMapper;
 import cz.matyas.SAP.Light.v1.repository.OrderRepository;
 import cz.matyas.SAP.Light.v1.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,6 +44,14 @@ public class OrderServiceImpl implements OrderService {
 
         return orderMapper.toDTO(createdOrderEntity);
     }
+    @Override
+    public OrderDTO createOrderForCurrentCustomer(OrderDTO orderDTO) {
+        orderDTO.setId(getCurrentUserId());
+        OrderEntity createdOrderEntity = orderRepository.save(orderMapper.toEntity(orderDTO));
+
+        return orderMapper.toDTO(createdOrderEntity);
+    }
+
 
     @Override
     public OrderDTO editOrderById(Long id, OrderDTO updateOrderDTO) {
@@ -59,6 +70,16 @@ public class OrderServiceImpl implements OrderService {
 
         return orderMapper.toDTO(deletedOrderEntity);
     }
+
+    @Override
+    public List<OrderDTO> getOrderForCurrentCustomer() {
+        List<OrderEntity> orderEntityList = orderRepository.findAllByUser(getCurrentUserId());
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        orderEntityList.forEach(orderEntity -> orderDTOList.add(orderMapper.toDTO(orderEntity)));
+
+        return orderDTOList;
+    }
+
     private OrderEntity getOrderEntityOrThrow(Long id){
         Optional<OrderEntity> orderEntity = orderRepository.findById(id);
         if (orderEntity.isEmpty()){
@@ -66,5 +87,12 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderEntity.get();
+    }
+
+    private Long getCurrentUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity currentUserEntity = (UserEntity)authentication.getPrincipal();
+
+        return currentUserEntity.getId();
     }
 }

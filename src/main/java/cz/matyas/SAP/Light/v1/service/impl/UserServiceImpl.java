@@ -8,6 +8,10 @@ import cz.matyas.SAP.Light.v1.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,11 +19,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     UserRepository userRepository;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDTO> getAll() {
@@ -69,14 +75,27 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDTO saveUserDTOorThrow(UserDTO userDTO) {
-        UserEntity createdUser;
+        UserEntity createdUser = userMapper.toEntity(userDTO);
+        createdUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
         try {
-            createdUser = userRepository.save(userMapper.toEntity(userDTO));
+            createdUser = userRepository.save(createdUser);
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException("email " + userDTO.getEmail() + "je již obsazen");
         }
 
         return userMapper.toDTO(createdUser);
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity userEntity;
+        try {
+            userEntity = userRepository.findByEmail(username);
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException("Uživatel s emailem " + username + " neexistuje");
+        }
+        return userEntity;
     }
 }

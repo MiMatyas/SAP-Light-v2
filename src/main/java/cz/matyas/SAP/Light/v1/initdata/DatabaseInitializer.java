@@ -13,6 +13,7 @@ import cz.matyas.SAP.Light.v1.repository.OrderRepository;
 import cz.matyas.SAP.Light.v1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -31,6 +32,8 @@ public class DatabaseInitializer implements CommandLineRunner {
     private UserRepository userRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
@@ -63,28 +66,28 @@ public class DatabaseInitializer implements CommandLineRunner {
         userEntitySuperAdmin.setFirstName("Super");
         userEntitySuperAdmin.setSurname("Admin");
         userEntitySuperAdmin.setEmail("super.admin@gmail.com");
-        userEntitySuperAdmin.setPassword("Admin*Admin");
+        userEntitySuperAdmin.setPassword(passwordEncoder.encode("Admin*Admin"));
         userEntitySuperAdmin.setRole(Role.SUPER_ADMIN);
 
         UserEntity userEntityAdmin = new UserEntity();
         userEntityAdmin.setFirstName("Adam");
         userEntityAdmin.setSurname("Novak");
         userEntityAdmin.setEmail("adam.novak@gmail.com");
-        userEntityAdmin.setPassword("adamnovak");
+        userEntityAdmin.setPassword(passwordEncoder.encode("adamnovak"));
         userEntityAdmin.setRole(Role.ADMIN);
 
         UserEntity userEntityOperator = new UserEntity();
         userEntityOperator.setFirstName("Petr");
         userEntityOperator.setSurname("Karadi");
         userEntityOperator.setEmail("petr.karadi@gmail.com");
-        userEntityOperator.setPassword("petrkaradi");
+        userEntityOperator.setPassword(passwordEncoder.encode("petrkaradi"));
         userEntityOperator.setRole(Role.OPERATOR);
 
         UserEntity userEntityCustomer = new UserEntity();
         userEntityCustomer.setFirstName("Marcel");
         userEntityCustomer.setSurname("Raisig");
-        userEntityCustomer.setEmail("mardel.raisig@gmail.com");
-        userEntityCustomer.setPassword("petrkaradi");
+        userEntityCustomer.setEmail("1");
+        userEntityCustomer.setPassword(passwordEncoder.encode("1"));
         userEntityCustomer.setRole(Role.CUSTOMER);
 
         userRepository.saveAll(List.of(userEntitySuperAdmin, userEntityAdmin, userEntityOperator, userEntityCustomer));

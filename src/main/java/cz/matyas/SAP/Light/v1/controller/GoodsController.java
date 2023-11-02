@@ -12,29 +12,33 @@ import java.util.List;
 public class GoodsController {
     @Autowired
     GoodsService goodsService;
+
     @GetMapping()
-    List<GoodsDTO> getAll(){
+    List<GoodsDTO> getAll() {
 
         return goodsService.getAll();
     }
+
     @GetMapping("/{goodsId}")
-    GoodsDTO getGoodsById(@PathVariable("goodsId") Long id){
+    GoodsDTO getGoodsById(@PathVariable("goodsId") Long id) {
 
         return goodsService.getGoodsById(id);
     }
 
-    @PostMapping("/cteate")
-    GoodsDTO createGoods(@RequestBody GoodsDTO goodsDTO){
+    @PostMapping("/create")
+    GoodsDTO createGoods(@RequestBody GoodsDTO goodsDTO) {
 
         return goodsService.createGoods(goodsDTO);
     }
+
     @PutMapping("/edit/{goodsId}")
-    GoodsDTO editGoodsById(@PathVariable("goodsId")Long id, @RequestBody GoodsDTO goodsDTO){
+    GoodsDTO editGoodsById(@PathVariable("goodsId") Long id, @RequestBody GoodsDTO goodsDTO) {
 
         return goodsService.editGoodsById(id, goodsDTO);
     }
+
     @DeleteMapping("/delete/{goodsId}")
-    GoodsDTO deleteGoodsById(@PathVariable("goodsId")Long id){
+    GoodsDTO deleteGoodsById(@PathVariable("goodsId") Long id) {
 
         return goodsService.deleteGoodsById(id);
     }

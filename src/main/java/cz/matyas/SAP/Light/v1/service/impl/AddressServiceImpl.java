@@ -2,11 +2,14 @@ package cz.matyas.SAP.Light.v1.service.impl;
 
 import cz.matyas.SAP.Light.v1.dto.AddressDTO;
 import cz.matyas.SAP.Light.v1.entity.AddressEntity;
+import cz.matyas.SAP.Light.v1.entity.UserEntity;
 import cz.matyas.SAP.Light.v1.mapper.AddressMapper;
 import cz.matyas.SAP.Light.v1.repository.AddressRepository;
 import cz.matyas.SAP.Light.v1.service.AddressService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,6 +46,24 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    public AddressDTO createAddressForUser(AddressDTO addressDTO) {
+        addressDTO.setId(getCurrentUserId());
+        AddressEntity createdAddressEntity = addressRepository.save(addressMapper.toEntity(addressDTO));
+
+        return addressMapper.toDTO(createdAddressEntity);
+    }
+
+    @Override
+    public List<AddressDTO> getAddressForCurrentUser() {
+        List<AddressEntity> addressEntityList = addressRepository.findAllAddressByUserId(getCurrentUserId());
+        List<AddressDTO> addressDTOList = new ArrayList<>();
+        addressEntityList.forEach(addressEntity -> addressDTOList.add(addressMapper.toDTO(addressEntity)));
+
+        return addressDTOList;
+    }
+
+
+    @Override
     public AddressDTO editAddressById(Long id, AddressDTO updateAddressDTO) {
         getAddressEntityOrThrow(id);
         AddressEntity updateAddressEntity = addressMapper.toEntity(updateAddressDTO);
@@ -67,5 +88,12 @@ public class AddressServiceImpl implements AddressService {
         }
 
         return addressEntity.get();
+    }
+
+    private Long getCurrentUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity currentUserEntity = (UserEntity)authentication.getPrincipal();
+
+        return currentUserEntity.getId();
     }
 }
