@@ -13,4 +13,5 @@ public interface OrderService {
 
     List<OrderDTO> getOrderForCurrentCustomer();
     OrderDTO createOrderForCurrentCustomer(OrderDTO orderDTO);
+    OrderDTO createOrderForReceiving(OrderDTO orderDTO);
 }

@@ -52,6 +52,15 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDTO(createdOrderEntity);
     }
 
+    @Override
+    public OrderDTO createOrderForReceiving(OrderDTO orderDTO) {
+        orderDTO.setId(getCurrentUserId());
+
+        OrderEntity createdOrderEntity = orderRepository.save(orderMapper.toEntity(orderDTO));
+
+        return orderMapper.toDTO(createdOrderEntity);
+    }
+
 
     @Override
     public OrderDTO editOrderById(Long id, OrderDTO updateOrderDTO) {

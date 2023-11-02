@@ -22,7 +22,7 @@ public class CustomerController {
     OrderService orderService;
     @Autowired
     AddressService addressService;
-    @GetMapping("goods")
+    @GetMapping("/goods")
     List<GoodsDTO> findAllGoods(){
 
         return goodsService.getAll();
