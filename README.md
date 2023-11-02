@@ -4,7 +4,6 @@ Aplikace pro správu skladu
 Použité technologie:
 
 1   spring-boot
-
     a.  starter-web
     b.  starter-security
     c.  starter-data-jpa
@@ -15,7 +14,7 @@ Použité technologie:
 Jedná se o backend aplikace pro správu skladu, jako frontend slouží swagger.
 V aplikaci existují 4 role z nichž každá má přístup k:
 
-1.  SuperAdministrítor
+1.  SuperAdministrátor
     a.  Má přístup ke všemu
 
 2.  administrátor
