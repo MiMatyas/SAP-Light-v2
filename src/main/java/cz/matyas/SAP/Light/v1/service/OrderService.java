@@ -14,4 +14,12 @@ public interface OrderService {
     List<OrderDTO> getOrderForCurrentCustomer();
     OrderDTO createOrderForCurrentCustomer(OrderDTO orderDTO);
     OrderDTO createOrderForReceiving(OrderDTO orderDTO);
+
+    List<OrderDTO> getReceivingOrders();
+
+    List<OrderDTO> getCustomersOrders();
+
+    OrderDTO completeReceivingOrder(Long id);
+
+    OrderDTO completeCustomerOrder(Long id);
 }

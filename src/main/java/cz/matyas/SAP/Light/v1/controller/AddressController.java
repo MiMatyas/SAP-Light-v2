@@ -3,12 +3,14 @@ package cz.matyas.SAP.Light.v1.controller;
 import cz.matyas.SAP.Light.v1.dto.AddressDTO;
 import cz.matyas.SAP.Light.v1.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/address")
+@Secured("ROLE_SUPER_ADMIN")
 public class AddressController {
     @Autowired
     AddressService addressService;

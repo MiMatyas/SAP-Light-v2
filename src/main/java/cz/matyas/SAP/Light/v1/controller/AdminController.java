@@ -5,12 +5,14 @@ import cz.matyas.SAP.Light.v1.dto.OrderDTO;
 import cz.matyas.SAP.Light.v1.service.GoodsService;
 import cz.matyas.SAP.Light.v1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
+@Secured(value = {"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
 public class AdminController {
     @Autowired
     GoodsService goodsService;
@@ -26,7 +28,7 @@ public class AdminController {
 
         return goodsService.getGoodsById(id);
     }
-    @PostMapping("/create")
+    @PostMapping("/create/goods")
     GoodsDTO createGoods(@RequestBody GoodsDTO goodsDTO) {
 
         return goodsService.createGoods(goodsDTO);

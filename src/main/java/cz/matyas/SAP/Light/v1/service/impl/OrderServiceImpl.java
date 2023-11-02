@@ -1,10 +1,15 @@
 package cz.matyas.SAP.Light.v1.service.impl;
 
 import cz.matyas.SAP.Light.v1.dto.OrderDTO;
+import cz.matyas.SAP.Light.v1.entity.GoodsEntity;
 import cz.matyas.SAP.Light.v1.entity.OrderEntity;
 import cz.matyas.SAP.Light.v1.entity.UserEntity;
+import cz.matyas.SAP.Light.v1.enums.Status;
 import cz.matyas.SAP.Light.v1.mapper.OrderMapper;
+import cz.matyas.SAP.Light.v1.repository.AddressRepository;
+import cz.matyas.SAP.Light.v1.repository.GoodsRepository;
 import cz.matyas.SAP.Light.v1.repository.OrderRepository;
+import cz.matyas.SAP.Light.v1.repository.UserRepository;
 import cz.matyas.SAP.Light.v1.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +26,14 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderRepository orderRepository;
     @Autowired
+    GoodsRepository goodsRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
     OrderMapper orderMapper;
+    @Autowired
+    AddressRepository addressRepository;
+
     @Override
     public List<OrderDTO> getAll() {
         List<OrderEntity> orderEntityList = orderRepository.findAll();
@@ -46,19 +58,79 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public OrderDTO createOrderForCurrentCustomer(OrderDTO orderDTO) {
-        orderDTO.setId(getCurrentUserId());
-        OrderEntity createdOrderEntity = orderRepository.save(orderMapper.toEntity(orderDTO));
+        OrderEntity orderEntity = orderMapper.toEntity(orderDTO);
+        orderEntity.setUser(userRepository.findById(getCurrentUserId()).get());
+        orderEntity.setAddress(addressRepository.findById(orderDTO.getAddressId()).get());
+        List<GoodsEntity> goodsEntityList = goodsRepository.findAllById(orderDTO.getGoodsIds());
+        orderEntity.setGoods(goodsEntityList);
+
+
+        OrderEntity createdOrderEntity = orderRepository.save(orderEntity);
 
         return orderMapper.toDTO(createdOrderEntity);
     }
 
     @Override
     public OrderDTO createOrderForReceiving(OrderDTO orderDTO) {
-        orderDTO.setId(getCurrentUserId());
+        OrderEntity orderEntity = orderMapper.toEntity(orderDTO);
+        orderEntity.setUser(userRepository.findById(getCurrentUserId()).get());
+        orderEntity.setAddress(addressRepository.findById(orderDTO.getAddressId()).get());
+        List<GoodsEntity> goodsEntityList = goodsRepository.findAllById(orderDTO.getGoodsIds());
+        orderEntity.setGoods(goodsEntityList);
 
-        OrderEntity createdOrderEntity = orderRepository.save(orderMapper.toEntity(orderDTO));
+        OrderEntity createdOrderEntity = orderRepository.save(orderEntity);
 
         return orderMapper.toDTO(createdOrderEntity);
+    }
+
+    @Override
+    public List<OrderDTO> getReceivingOrders() {
+        List<OrderEntity> orderEntityList = orderRepository.findAllOrdersForReceiving();
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        orderEntityList.forEach(orderEntity -> orderDTOList.add(orderMapper.toDTO(orderEntity)));
+
+        return orderDTOList;
+    }
+
+    @Override
+    public List<OrderDTO> getCustomersOrders() {
+        List<OrderEntity> orderEntityList = orderRepository.findAllOrdersForCustomers();
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        orderEntityList.forEach(orderEntity -> orderDTOList.add(orderMapper.toDTO(orderEntity)));
+
+        return orderDTOList;
+    }
+
+    @Override
+    public OrderDTO completeReceivingOrder(Long id) {
+        OrderEntity orderEntity = getOrderForReceivingOrThrow(id);
+
+        List<GoodsEntity> receivingGoods = orderEntity.getGoods();
+        receivingGoods.forEach(goodsEntity -> {
+            goodsEntity.setAvilableQuantity(goodsEntity.getAvilableQuantity()+1);
+        });
+        goodsRepository.saveAll(receivingGoods);
+
+        orderEntity.setStatus(Status.SHIPPED);
+        orderRepository.save(orderEntity);
+
+        return orderMapper.toDTO(orderEntity);
+    }
+
+    @Override
+    public OrderDTO completeCustomerOrder(Long id) {
+        OrderEntity orderEntity = getOrderForCustomerOrThrow(id);
+
+        List<GoodsEntity> receivingGoods = orderEntity.getGoods();
+        receivingGoods.forEach(goodsEntity -> {
+            goodsEntity.setAvilableQuantity(goodsEntity.getAvilableQuantity()+1);
+        });
+        goodsRepository.saveAll(receivingGoods);
+
+        orderEntity.setStatus(Status.RECEIVED);
+        orderRepository.save(orderEntity);
+
+        return orderMapper.toDTO(orderEntity);
     }
 
 
@@ -97,6 +169,25 @@ public class OrderServiceImpl implements OrderService {
 
         return orderEntity.get();
     }
+
+    private OrderEntity getOrderForCustomerOrThrow(Long id){
+        Optional<OrderEntity> orderEntity = orderRepository.findOrdersForReceivingById(id);
+        if (orderEntity.isEmpty()){
+            throw new EntityNotFoundException("Objednávka s id " + id + " neexistuje nebo nenáleží Zákazníkovy nebo je již odeslaná");
+        }
+
+        return orderEntity.get();
+    }
+
+    private OrderEntity getOrderForReceivingOrThrow(Long id){
+        Optional<OrderEntity> orderEntity = orderRepository.findOrdersForCustomersById(id);
+        if (orderEntity.isEmpty()){
+            throw new EntityNotFoundException("Objednávka s id " + id + " neexistuje nebo není pro příjem nebo je již přijatá");
+        }
+
+        return orderEntity.get();
+    }
+
 
     private Long getCurrentUserId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/customer")
-@Secured(value = "ROLE_CUSTOMER")
+@Secured(value = {"ROLE_CUSTOMER", "ROLE_SUPER_ADMIN"})
 public class CustomerController {
     @Autowired
     GoodsService goodsService;

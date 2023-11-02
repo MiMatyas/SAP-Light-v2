@@ -3,12 +3,14 @@ package cz.matyas.SAP.Light.v1.controller;
 import cz.matyas.SAP.Light.v1.dto.GoodsDTO;
 import cz.matyas.SAP.Light.v1.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/goods")
+@Secured("ROLE_SUPER_ADMIN")
 public class GoodsController {
     @Autowired
     GoodsService goodsService;
