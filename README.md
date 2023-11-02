@@ -2,7 +2,9 @@
 Aplikace pro správu skladu
 
 Použité technologie:
+
 1   spring-boot
+
     a.  starter-web
     b.  starter-security
     c.  starter-data-jpa
