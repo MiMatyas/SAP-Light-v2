@@ -5,6 +5,7 @@ import cz.matyas.SAP.Light.v1.entity.GoodsEntity;
 import cz.matyas.SAP.Light.v1.mapper.GoodsMapper;
 import cz.matyas.SAP.Light.v1.repository.GoodsRepository;
 import cz.matyas.SAP.Light.v1.service.GoodsService;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,14 +59,18 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public GoodsDTO deleteGoodsById(Long id) {
         GoodsEntity deletedGoodsEntity = getGoodsEntityOrThrow(id);
-        goodsRepository.delete(deletedGoodsEntity);
+        try {
+            goodsRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new EntityExistsException("Nelze smazat produkt který je součástí existující objednávky");
+        }
 
         return goodsMapper.toDTO(deletedGoodsEntity);
     }
 
-    private GoodsEntity getGoodsEntityOrThrow(Long id){
+    private GoodsEntity getGoodsEntityOrThrow(Long id) {
         Optional<GoodsEntity> goodsEntity = goodsRepository.findById(id);
-        if (goodsEntity.isEmpty()){
+        if (goodsEntity.isEmpty()) {
             throw new EntityNotFoundException("Produkt s id " + id + " nebyl nalezen");
         }
 

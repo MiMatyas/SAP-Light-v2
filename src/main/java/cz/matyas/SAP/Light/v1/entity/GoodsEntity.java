@@ -16,7 +16,7 @@ public class GoodsEntity {
     @Column
     private Double price;
     @Column
-    private Integer avilableQuantity;
+    private Integer availableQuantity;
     @ManyToMany(mappedBy = "goods")
     private List<OrderEntity> orders;
 
@@ -44,12 +44,12 @@ public class GoodsEntity {
         this.price = price;
     }
 
-    public Integer getAvilableQuantity() {
-        return avilableQuantity;
+    public Integer getAvailableQuantity() {
+        return availableQuantity;
     }
 
-    public void setAvilableQuantity(Integer avilableQuantity) {
-        this.avilableQuantity = avilableQuantity;
+    public void setAvailableQuantity(Integer availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 
     public List<OrderEntity> getOrders() {

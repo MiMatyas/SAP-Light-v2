@@ -23,27 +23,27 @@ public class AdminController {
 
         return goodsService.getAll();
     }
-    @GetMapping("/{goodsId}")
+    @GetMapping("/goods/{goodsId}")
     GoodsDTO getGoodsById(@PathVariable("goodsId") Long id) {
 
         return goodsService.getGoodsById(id);
     }
-    @PostMapping("/create/goods")
+    @PostMapping("/goods/create")
     GoodsDTO createGoods(@RequestBody GoodsDTO goodsDTO) {
 
         return goodsService.createGoods(goodsDTO);
     }
-    @PutMapping("/edit/{goodsId}")
+    @PutMapping("/goods/edit/{goodsId}")
     GoodsDTO editGoodsById(@PathVariable("goodsId") Long id, @RequestBody GoodsDTO goodsDTO) {
 
         return goodsService.editGoodsById(id, goodsDTO);
     }
-    @DeleteMapping("/delete/{goodsId}")
+    @DeleteMapping("/goods/delete/{goodsId}")
     GoodsDTO deleteGoodsById(@PathVariable("goodsId") Long id) {
 
         return goodsService.deleteGoodsById(id);
     }
-    @PostMapping("/create/order")
+    @PostMapping("/order/create")
     OrderDTO createOrderForReceiving(@RequestBody OrderDTO orderDTO){
 
         return orderService.createOrderForReceiving(orderDTO);

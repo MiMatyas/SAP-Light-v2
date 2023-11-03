@@ -65,8 +65,8 @@ public class DatabaseInitializer implements CommandLineRunner {
         UserEntity userEntitySuperAdmin = new UserEntity();
         userEntitySuperAdmin.setFirstName("Super");
         userEntitySuperAdmin.setSurname("Admin");
-        userEntitySuperAdmin.setEmail("super.admin@gmail.com");
-        userEntitySuperAdmin.setPassword(passwordEncoder.encode("Admin*Admin"));
+        userEntitySuperAdmin.setEmail("1");
+        userEntitySuperAdmin.setPassword(passwordEncoder.encode("1"));
         userEntitySuperAdmin.setRole(Role.SUPER_ADMIN);
 
         UserEntity userEntityAdmin = new UserEntity();
@@ -80,14 +80,14 @@ public class DatabaseInitializer implements CommandLineRunner {
         userEntityOperator.setFirstName("Petr");
         userEntityOperator.setSurname("Karadi");
         userEntityOperator.setEmail("petr.karadi@gmail.com");
-        userEntityOperator.setPassword(passwordEncoder.encode("petrkaradi"));
+        userEntityOperator.setPassword(passwordEncoder.encode("petrkkaradi"));
         userEntityOperator.setRole(Role.OPERATOR);
 
         UserEntity userEntityCustomer = new UserEntity();
         userEntityCustomer.setFirstName("Marcel");
         userEntityCustomer.setSurname("Raisig");
-        userEntityCustomer.setEmail("1");
-        userEntityCustomer.setPassword(passwordEncoder.encode("1"));
+        userEntityCustomer.setEmail("mardec.raisig@gmail.com");
+        userEntityCustomer.setPassword(passwordEncoder.encode("mardelraisig"));
         userEntityCustomer.setRole(Role.CUSTOMER);
 
         userRepository.saveAll(List.of(userEntitySuperAdmin, userEntityAdmin, userEntityOperator, userEntityCustomer));
@@ -98,32 +98,32 @@ public class DatabaseInitializer implements CommandLineRunner {
         GoodsEntity goodsEntity1 = new GoodsEntity();
         goodsEntity1.setPartNumber("111-A");
         goodsEntity1.setPrice(999.9D);
-        goodsEntity1.setAvilableQuantity(500);
+        goodsEntity1.setAvailableQuantity(500);
 
         GoodsEntity goodsEntity2 = new GoodsEntity();
         goodsEntity2.setPartNumber("222-B");
         goodsEntity2.setPrice(899.9D);
-        goodsEntity2.setAvilableQuantity(100);
+        goodsEntity2.setAvailableQuantity(100);
 
         GoodsEntity goodsEntity3 = new GoodsEntity();
         goodsEntity3.setPartNumber("111-A");
         goodsEntity3.setPrice(799.9D);
-        goodsEntity3.setAvilableQuantity(500);
+        goodsEntity3.setAvailableQuantity(500);
 
         GoodsEntity goodsEntity4 = new GoodsEntity();
         goodsEntity4.setPartNumber("333-C");
         goodsEntity4.setPrice(699.9D);
-        goodsEntity4.setAvilableQuantity(100);
+        goodsEntity4.setAvailableQuantity(100);
 
         GoodsEntity goodsEntity5 = new GoodsEntity();
         goodsEntity5.setPartNumber("444-D");
         goodsEntity5.setPrice(599.9D);
-        goodsEntity5.setAvilableQuantity(500);
+        goodsEntity5.setAvailableQuantity(500);
 
         GoodsEntity goodsEntity6 = new GoodsEntity();
         goodsEntity6.setPartNumber("555-E");
         goodsEntity6.setPrice(499.9D);
-        goodsEntity6.setAvilableQuantity(100);
+        goodsEntity6.setAvailableQuantity(100);
 
         goodsRepository.saveAll(Arrays.asList(goodsEntity1, goodsEntity2, goodsEntity3, goodsEntity4, goodsEntity5, goodsEntity6));
     }

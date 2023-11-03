@@ -1,6 +1,7 @@
 package cz.matyas.SAP.Light.v1.service.impl;
 
 import cz.matyas.SAP.Light.v1.dto.OrderDTO;
+import cz.matyas.SAP.Light.v1.entity.AddressEntity;
 import cz.matyas.SAP.Light.v1.entity.GoodsEntity;
 import cz.matyas.SAP.Light.v1.entity.OrderEntity;
 import cz.matyas.SAP.Light.v1.entity.UserEntity;
@@ -73,14 +74,24 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO createOrderForReceiving(OrderDTO orderDTO) {
         OrderEntity orderEntity = orderMapper.toEntity(orderDTO);
+        orderEntity.setStatus(Status.NEW);
         orderEntity.setUser(userRepository.findById(getCurrentUserId()).get());
-        orderEntity.setAddress(addressRepository.findById(orderDTO.getAddressId()).get());
+        AddressEntity currentUserAddress = findByAddressIdAndUserIdOrThrow(orderDTO.getAddressId(), getCurrentUserId());
+        orderEntity.setAddress(currentUserAddress);
         List<GoodsEntity> goodsEntityList = goodsRepository.findAllById(orderDTO.getGoodsIds());
         orderEntity.setGoods(goodsEntityList);
-
         OrderEntity createdOrderEntity = orderRepository.save(orderEntity);
 
         return orderMapper.toDTO(createdOrderEntity);
+    }
+
+    private AddressEntity findByAddressIdAndUserIdOrThrow(Long addressId, Long currentUserId) {
+        Optional<AddressEntity> addressEntity = addressRepository.findByAddressIdAndUserId(addressId, currentUserId);
+        if (addressEntity.isEmpty()){
+            throw new EntityNotFoundException("Uživateli nepatří adresa s id "+ addressId);
+        }
+
+        return addressEntity.get();
     }
 
     @Override
@@ -107,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<GoodsEntity> receivingGoods = orderEntity.getGoods();
         receivingGoods.forEach(goodsEntity -> {
-            goodsEntity.setAvilableQuantity(goodsEntity.getAvilableQuantity()+1);
+            goodsEntity.setAvailableQuantity(goodsEntity.getAvailableQuantity()+1);
         });
         goodsRepository.saveAll(receivingGoods);
 
@@ -123,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<GoodsEntity> receivingGoods = orderEntity.getGoods();
         receivingGoods.forEach(goodsEntity -> {
-            goodsEntity.setAvilableQuantity(goodsEntity.getAvilableQuantity()+1);
+            goodsEntity.setAvailableQuantity(goodsEntity.getAvailableQuantity()+1);
         });
         goodsRepository.saveAll(receivingGoods);
 
