@@ -25,8 +25,8 @@ V aplikaci existují 4 role z nichž každá má přístup k:
 
 3.  administrátor
 
-    a. manipulovat se zbožím všemi CRUD operacemi
-    b. vytvářet objednávky pro naskladnění zboží
+    a. Manipulovat se zbožím všemi CRUD operacemi
+    b. Vytvářet objednávky pro naskladnění zboží
 
 5.  Zákazník
 
@@ -38,5 +38,5 @@ V aplikaci existují 4 role z nichž každá má přístup k:
 7.  Operátor
 
     a.  Náhled všech objednávek
-    b.  příjem objednávky která je příjmová
-    c.  odeslání objednávky zákazníkovy
+    b.  Příjem objednávky která je příjmová
+    c.  Odeslání objednávky zákazníkovy
