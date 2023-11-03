@@ -20,19 +20,23 @@ Jedná se o backend aplikace pro správu skladu, jako frontend slouží swagger.
 V aplikaci existují 4 role z nichž každá má přístup k:
 
 1.  SuperAdministrátor
+2.  
     a.  Má přístup ke všemu
 
-2.  administrátor
+3.  administrátor
+
     a. manipulovat se zbožím všemi CRUD operacemi
     b. vytvářet objednávky pro naskladnění zboží
 
-3.  Zákazník
+5.  Zákazník
+
     a.  Vytvořit doručovací adresu
     b.  Vytvořit objednávku
     c.  Číst svoje adresy
     d.  Číst dvoje objednávky
 
-4.  Operátor
+7.  Operátor
+
     a.  Náhled všech objednávek
     b.  příjem objednávky která je příjmová
     c.  odeslání objednávky zákazníkovy
