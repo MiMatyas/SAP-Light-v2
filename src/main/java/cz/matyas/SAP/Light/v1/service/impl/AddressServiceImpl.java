@@ -5,6 +5,7 @@ import cz.matyas.SAP.Light.v1.entity.AddressEntity;
 import cz.matyas.SAP.Light.v1.entity.UserEntity;
 import cz.matyas.SAP.Light.v1.mapper.AddressMapper;
 import cz.matyas.SAP.Light.v1.repository.AddressRepository;
+import cz.matyas.SAP.Light.v1.repository.UserRepository;
 import cz.matyas.SAP.Light.v1.service.AddressService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import java.util.Optional;
 public class AddressServiceImpl implements AddressService {
     @Autowired
     AddressRepository addressRepository;
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     AddressMapper addressMapper;
     @Override
@@ -47,10 +50,11 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDTO createAddressForUser(AddressDTO addressDTO) {
-        addressDTO.setId(getCurrentUserId());
-        AddressEntity createdAddressEntity = addressRepository.save(addressMapper.toEntity(addressDTO));
+        AddressEntity addressEntity = addressMapper.toEntity(addressDTO);
+        addressEntity.setUser(userRepository.findById(getCurrentUserId()).get());
+        AddressEntity createdAddressEntity = addressRepository.save(addressEntity);
 
-        return addressMapper.toDTO(createdAddressEntity);
+        return addressMapper.toDTO(addressEntity);
     }
 
     @Override

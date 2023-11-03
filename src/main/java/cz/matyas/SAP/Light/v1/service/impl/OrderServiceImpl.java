@@ -60,12 +60,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO createOrderForCurrentCustomer(OrderDTO orderDTO) {
         OrderEntity orderEntity = orderMapper.toEntity(orderDTO);
+        orderEntity.setStatus(Status.NEW);
         orderEntity.setUser(userRepository.findById(getCurrentUserId()).get());
-        orderEntity.setAddress(addressRepository.findById(orderDTO.getAddressId()).get());
+        AddressEntity currentUserAddress = findByAddressIdAndUserIdOrThrow(orderDTO.getAddressId(), getCurrentUserId());
+        orderEntity.setAddress(currentUserAddress);
         List<GoodsEntity> goodsEntityList = goodsRepository.findAllById(orderDTO.getGoodsIds());
         orderEntity.setGoods(goodsEntityList);
-
-
         OrderEntity createdOrderEntity = orderRepository.save(orderEntity);
 
         return orderMapper.toDTO(createdOrderEntity);

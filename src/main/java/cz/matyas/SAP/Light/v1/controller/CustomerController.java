@@ -27,22 +27,22 @@ public class CustomerController {
 
         return goodsService.getAll();
     }
-    @PostMapping("/create/order")
+    @PostMapping("/order/create")
     OrderDTO createOrder(@RequestBody OrderDTO orderDTO){
 
         return orderService.createOrderForCurrentCustomer(orderDTO);
     }
-    @PostMapping("/create/address")
+    @PostMapping("/address/create")
     AddressDTO createAddress(@RequestBody AddressDTO addressDTO){
 
         return addressService.createAddressForUser(addressDTO);
     }
-    @GetMapping("/get/orders")
+    @GetMapping("/orders")
     List<OrderDTO> getCustomerOrders(){
 
         return orderService.getOrderForCurrentCustomer();
     }
-    @GetMapping("/get/address")
+    @GetMapping("/address")
     List<AddressDTO> getCustomerAddress(){
 
         return addressService.getAddressForCurrentUser();
