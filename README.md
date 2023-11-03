@@ -20,7 +20,7 @@ Jedná se o backend aplikace pro správu skladu, jako frontend slouží swagger.
 V aplikaci existují 4 role z nichž každá má přístup k:
 
 1.  SuperAdministrátor
-2.  
+
     a.  Má přístup ke všemu
 
 3.  administrátor
